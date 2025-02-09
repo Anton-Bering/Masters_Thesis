@@ -1,0 +1,93 @@
+#-----CLASS v0.3.0 (branch: main, hash: 89d579436377c881bccc9ba1c4f3895903ab3b6c)-----
+
+data.experiments = ['Planck_highl_TTTEEE_lite', 'Planck_lowl_EE_connect', 'Planck_lowl_TT' , 'bao_boss_dr12']
+
+data.over_sampling=[1, 1]
+
+data.parameters['Omega_k']      = [  0,       -0.1, 0.1,     0.0005,     1,  'cosmo']
+data.parameters['omega_b']      = [  2.2377,   None, None,      0.015, 0.01, 'cosmo']
+data.parameters['omega_cdm']    = [  0.12010,  None, None,     0.0013,    1, 'cosmo']
+data.parameters['H0']           = [  67.7,     None, None,       0.60,    1, 'cosmo']
+data.parameters['NY_A_s'] = [  3.0447,   None, None,      0.015,    1, 'cosmo']
+data.parameters['n_s']          = [  0.9659,   None, None,     0.0042,    1, 'cosmo']
+data.parameters['tau_reio']     = [  0.0543,  0.004, None,      0.008,    1, 'cosmo']
+
+data.parameters['fEDE']          = [ 0.01,   1e-5,     0.3,     0.01,   1,      'cosmo']
+data.parameters['log10z_c']      = [ 3.0,    3.0,      4.3,     0.01,   1,      'cosmo']
+data.parameters['thetai_scf']    = [ 3.0,    0.1,      3.1,     0.05,   1,      'cosmo']
+
+data.parameters['A_planck']          = [ 1.00061,   0.9,   1.1,     0.0025,     1, 'nuisance']
+ 
+# data.parameters['z_reio']          = [1, None, None, 0,     1,   'derived']
+# data.parameters['Omega_Lambda']    = [1, None, None, 0,     1,   'derived']
+# data.parameters['YHe']             = [1, None, None, 0,     1,   'derived']
+# data.parameters['100*theta_s']     = [0, None, None, 0,     1,   'derived']
+# data.parameters['A_s']             = [0, None, None, 0,  1e-9,   'derived']
+# data.parameters['sigma8']          = [0, None, None, 0,     1,   'derived']
+
+data.cosmo_arguments['k_pivot']                           = 0.05
+# Masse løse neutrinorer:
+data.cosmo_arguments['N_ur']                              = 2.0328
+#
+# neutrinorer ed masse:
+data.cosmo_arguments['N_ncdm']                            = 1
+data.cosmo_arguments['m_ncdm']                            = 0.06
+data.cosmo_arguments['T_ncdm']                            = 0.71611
+# Gange med dette:
+data.cosmo_arguments['deg_ncdm']                          = 1.0
+
+# tilføjt samme med EDE:
+data.cosmo_arguments['start_large_k_at_tau_h_over_tau_k'] = 0.000001
+data.cosmo_arguments['start_small_k_at_tau_c_over_tau_h'] = 0.000001
+data.cosmo_arguments['Omega_Lambda']                      = 0       
+data.cosmo_arguments['Omega_fld']                         = 0
+data.cosmo_arguments['Omega_scf']                         = -1
+data.cosmo_arguments['n_scf']                             = 3
+data.cosmo_arguments['CC_scf']                            = 1
+data.cosmo_arguments['scf_parameters']                    = '1, 1, 1, 1, 1, 0.0'
+data.cosmo_arguments['scf_tuning_index']                  = 3           
+data.cosmo_arguments['attractor_ic_scf']                  = 'no'        
+
+data.cosmo_arguments['connect_model'] = 'EDE_K_17_06_2024_13'
+
+### Denne bør være 'False' hvis du kører med BAO
+data.cosmo_arguments['connect_only'] = not bool(sum([0 if 'bao' not in string else 1 for string in data.experiments]))
+
+data.N=10
+data.write_step=5 
+(base) [abbp@s96n41 input]$ 
+
+
+#-----Likelihood-Planck_highl_TTTEEE_lite-----
+Planck_highl_TTTEEE_lite.path_clik = '/home/abbp/connect_public/resources/planck2018/code/plc_3.0/plc-3.01/../../../baseline/plc_3.0/hi_l/plik_lite/plik_lite_v22_TTTEEE.clik'
+Planck_highl_TTTEEE_lite.A_planck_prior_center = 1
+Planck_highl_TTTEEE_lite.A_planck_prior_variance = 0.0025
+
+
+#-----Likelihood-Planck_lowl_EE_connect-----
+Planck_lowl_EE_connect.path_clik = '/home/abbp/connect_public/resources/planck2018/code/plc_3.0/plc-3.01/../../../baseline/plc_3.0/low_l/simall/simall_100x143_offlike5_EE_Aplanck_B.clik'
+
+
+#-----Likelihood-Planck_lowl_TT-----
+Planck_lowl_TT.path_clik = '/home/abbp/connect_public/resources/planck2018/code/plc_3.0/plc-3.01/../../../baseline/plc_3.0/low_l/commander/commander_dx12_v3_2_29.clik'
+
+
+#-----Likelihood-bao_boss_dr12-----
+bao_boss_dr12.data_directory = '/home/abbp/connect_public/resources/montepython_public/data'
+bao_boss_dr12.data_file = 'COMBINEDDR12_BAO_consensus_dM_Hz/BAO_consensus_results_dM_Hz.txt'
+bao_boss_dr12.cov_file = 'COMBINEDDR12_BAO_consensus_dM_Hz/BAO_consensus_covtot_dM_Hz.txt'
+bao_boss_dr12.rs_rescale = 1.0
+bao_boss_dr12.rd_fid_in_Mpc = 147.78
+
+
+#-----------Cosmological-arguments---------
+data.cosmo_arguments.update({'k_pivot': 0.05, 'N_ur': 2.0328, 'N_ncdm': 1, 'm_ncdm': 0.06, 'T_ncdm': 0.71611, 'deg_ncdm': 1.0, 'start_large_k_at_tau_h_over_tau_k': 1e-06, 'start_small_k_at_tau_c_over_tau_h': 1e-06, 'Omega_Lambda': 0, 'Omega_fld': 0, 'Omega_scf': -1, 'n_scf': 3, 'CC_scf': 1, 'scf_parameters': '1, 1, 1, 1, 1, 0.0', 'scf_tuning_index': 3, 'attractor_ic_scf': 'no', 'connect_model': 'EDE_K_17_06_2024_13', 'connect_only': False, 'lensing': 'yes', 'output': 'tCl lCl pCl', 'l_max_scalars': 2508})
+
+
+#--------Default-Configuration------
+data.path['root']	= '/home/abbp/connect_public/resources/montepython_public'
+data.path['MontePython']	= '/home/abbp/connect_public/resources/montepython_public/montepython'
+data.path['data']	= '/home/abbp/connect_public/resources/montepython_public/data'
+data.path['cosmo']	= '/home/abbp/connect_public/mcmc_plugin'
+data.path['clik']	= '/home/abbp/connect_public/resources/planck2018/code/plc_3.0/plc-3.01'
+data.path['montepython']	= '/home/abbp/connect_public/resources/montepython_public'
